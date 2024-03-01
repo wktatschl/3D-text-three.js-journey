@@ -45,35 +45,51 @@ fontLoader.load(
                 bevelSegments: 4
             }
         )
-        // textGeometry.computeBoundingBox()
        
         textGeometry.center()
 
         const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture })
-        // textMaterial.wireframe = false
         const text = new THREE.Mesh(textGeometry, material)
         scene.add(text)
 
         const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
 
-        for (let i = 0; i < 300; i++) {
-            
-            const donut = new THREE.Mesh(donutGeometry, material)
 
-            donut.position.x = (Math.random() - 0.5) * 10
-            donut.position.y = (Math.random() - 0.5) * 10
-            donut.position.z = (Math.random() - 0.5) * 10
+const textPosition = text.position;
+const minDistance = 2;
 
-            donut.rotation.x = Math.random() * Math.PI
-            donut.rotation.y = Math.random() * Math.PI
+for (let i = 0; i < 300; i++) {
+    let validPosition = false;
+    let position;
 
-            const scale = Math.random()
-            donut.scale.x = scale
-            donut.scale.y = scale
-            donut.scale.z = scale
+    while (!validPosition) {
+        const x = (Math.random() - 0.5) * 10; 
+        const y = (Math.random() - 0.5) * 10; 
+        const z = (Math.random() - 0.5) * 10; 
 
-            scene.add(donut)
+        position = new THREE.Vector3(x, y, z);
+
+        const distance = position.distanceTo(textPosition);
+
+        if (distance >= minDistance) {
+            validPosition = true;
         }
+    }
+
+    const donut = new THREE.Mesh(donutGeometry, material);
+    donut.position.copy(position);
+
+    donut.rotation.x = Math.random() * Math.PI;
+    donut.rotation.y = Math.random() * Math.PI;
+    donut.rotation.z = Math.random() * Math.PI;
+
+    const scale = Math.random();
+    donut.scale.set(scale, scale, scale);
+
+    scene.add(donut);
+}
+
+
     }
 )
 
